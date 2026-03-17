@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dev Tools Hub</title>
+  <meta name="description" content="Unabhängige Tool-Startseite für Webentwicklung mit React, Next.js, Node.js, HTML, CSS und Bildbearbeitung." />
+  <style>
+    :root {
+      --primary: #30465c;
+      --primary-dark: #253647;
+      --accent: #9ec418;
+      --accent-dark: #8ab315;
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --muted: #5a6c7d;
+      --border: #dfe6ec;
+      --shadow: 0 12px 28px rgba(37, 54, 71, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", "Trebuchet MS", "Helvetica Neü", Arial, sans-serif;
+      background: radial-gradient(circle at 15% 0%, #f9fcf1 0%, var(--bg) 42%, #f2f6fa 100%);
+      color: var(--primary);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #fff;
+      border-bottom: 4px solid var(--accent);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 10px 24px rgba(26, 39, 51, 0.2);
+    }
+
+    .topbar-inner {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      font-size: 1.05rem;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .hero {
+      margin-top: 20px;
+      background: linear-gradient(145deg, #ffffff 0%, #f7fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2vw, 2.2rem);
+      line-height: 1.2;
+    }
+
+    .sub {
+      margin-top: 10px;
+      max-width: 850px;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .stats {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(110px, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.15rem;
+    }
+
+    .stat span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .controls {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1.5fr 2fr;
+      gap: 12px;
+    }
+
+    .search {
+      width: 100%;
+      max-height: 6vh;
+      border-radius: 12px;
+      border: 1px solid #cdd8e2;
+      padding: 11px 14px;
+      font-size: 0.95rem;
+      color: var(--primary);
+      background: #fff;
+    }
+
+    .search:focus {
+      outline: 2px solid rgba(158, 196, 24, 0.35);
+      border-color: var(--accent);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .chip {
+      border: 1px solid #ced9e3;
+      background: #fff;
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chip:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .section {
+      margin-top: 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid #edf2f6;
+      background: linear-gradient(90deg, #f8fbfd 0%, #ffffff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .grid {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid #dfe6ec;
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      min-height: 176px;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(37, 54, 71, 0.12);
+      border-color: #c8d4df;
+    }
+
+    .label {
+      align-self: flex-start;
+      background: #edf2f6;
+      color: var(--primary);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.35px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.02rem;
+      line-height: 1.3;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.87rem;
+      line-height: 1.45;
+    }
+
+    .tags {
+      margin-top: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      background: #f4f7fa;
+      color: #4f6172;
+      border: 1px solid #e4ecf2;
+      border-radius: 999px;
+      padding: 3px 8px;
+    }
+
+    .open {
+      margin-top: 8px;
+      width: fit-content;
+      font-size: 0.83rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--primary);
+      border-radius: 10px;
+      padding: 8px 11px;
+      transition: background 0.2s ease;
+    }
+
+    .open:hover {
+      background: #1f2f40;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .shell {
+        padding: 14px;
+      }
+
+      .hero {
+        padding: 20px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">Dev Tools <span>Hub</span></div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="controls">
+        <input id="search" class="search" type="text" placeholder="Suche nach Name, Tag oder Beschreibung..." />
+        <div class="chips" id="category-filters">
+          <button class="chip active" data-filter="all">Alle</button>
+          <button class="chip" data-filter="essentials">Essentials</button>
+          <button class="chip" data-filter="react">React + Next</button>
+          <button class="chip" data-filter="node">Node + API</button>
+          <button class="chip" data-filter="css">HTML + CSS + UI</button>
+          <button class="chip" data-filter="assets">Bilder + Assets</button>
+          <button class="chip" data-filter="quality">Testing + Quality</button>
+          <button class="chip" data-filter="deploy">Deploy + Hosting</button>
+          <button class="chip" data-filter="db">DB + Data</button>
+          <button class="chip" data-filter="productivity">Produktivität</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Tool Sammlung</h2>
+        <p id="result-count">58 Treffer</p>
+      </div>
+
+      <div class="grid" id="tool-grid">
+        <article class="card" data-category="essentials" data-search="lucide icons icon set svg react ui">
+          <span class="label">Essentials</span>
+          <h3>Lucide Icons</h3>
+          <p>Leichtes Open-Source Icon Set für Webapps, React und Design Systems.</p>
+          <div class="tags"><span class="tag">Icons</span><span class="tag">React</span></div>
+          <a class="open" href="https://lucide.dev/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="essentials css" data-search="css gradient generator farbverlauf design">
+          <span class="label">Essentials</span>
+          <h3>CSS Gradient</h3>
+          <p>Gradienten visuell bauen und den passenden CSS-Code direkt kopieren.</p>
+          <div class="tags"><span class="tag">CSS</span><span class="tag">Design</span></div>
+          <a class="open" href="https://cssgradient.io/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="essentials productivity" data-search="miro mindmap whiteboard collaboration planning">
+          <span class="label">Essentials</span>
+          <h3>Miro Mindmaps</h3>
+          <p>Mindmaps, Flows und Team-Boards für Architektur und Projektplanung.</p>
+          <div class="tags"><span class="tag">Mindmap</span><span class="tag">Collab</span></div>
+          <a class="open" href="https://miro.com/de/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="essentials assets" data-search="cloudconvert image convert png webp pdf converter">
+          <span class="label">Essentials</span>
+          <h3>CloudConvert</h3>
+          <p>Dateien zwischen Formaten konvertieren, ideal für Assets und Content.</p>
+          <div class="tags"><span class="tag">Conversion</span><span class="tag">Assets</span></div>
+          <a class="open" href="https://cloudconvert.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="essentials assets" data-search="pixlr editor image bearbeiten browser photoshop alternative">
+          <span class="label">Essentials</span>
+          <h3>Pixlr Editor</h3>
+          <p>Online Bildbearbeitung für schnelle Mockups, Thumbnails und Asset-Fixes.</p>
+          <div class="tags"><span class="tag">Image</span><span class="tag">Editor</span></div>
+          <a class="open" href="https://pixlr.com/de/editor/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="react" data-search="react docs hooks components state">
+          <span class="label">React + Next</span>
+          <h3>React Docs</h3>
+          <p>Offizielle React Dokumentation für Komponenten, Hooks und Patterns.</p>
+          <div class="tags"><span class="tag">React</span><span class="tag">Docs</span></div>
+          <a class="open" href="https://react.dev/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="react" data-search="nextjs docs app router server components">
+          <span class="label">React + Next</span>
+          <h3>Next.js Docs</h3>
+          <p>App Router, Server Actions, Caching und Deployment Best Practices.</p>
+          <div class="tags"><span class="tag">Next.js</span><span class="tag">SSR</span></div>
+          <a class="open" href="https://nextjs.org/docs" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="react" data-search="tanstack qüry server state caching react qüry">
+          <span class="label">React + Next</span>
+          <h3>TanStack Qüry</h3>
+          <p>Server-State Management mit intelligentem Caching und Mutation Flows.</p>
+          <div class="tags"><span class="tag">State</span><span class="tag">Data Fetching</span></div>
+          <a class="open" href="https://tanstack.com/qüry/latest" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="react" data-search="zustand state management react store">
+          <span class="label">React + Next</span>
+          <h3>Zustand</h3>
+          <p>Minimalistisches State Management für React ohne Boilerplate.</p>
+          <div class="tags"><span class="tag">State</span><span class="tag">React</span></div>
+          <a class="open" href="https://zustand-demo.pmnd.rs/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="react" data-search="react hook form forms validation">
+          <span class="label">React + Next</span>
+          <h3>React Hook Form</h3>
+          <p>Performante Formulare mit einfacher Validierung und sauberer API.</p>
+          <div class="tags"><span class="tag">Forms</span><span class="tag">Validation</span></div>
+          <a class="open" href="https://react-hook-form.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="react" data-search="storybook ui components library design system">
+          <span class="label">React + Next</span>
+          <h3>Storybook</h3>
+          <p>Komponenten isoliert entwickeln, dokumentieren und visuell testen.</p>
+          <div class="tags"><span class="tag">UI</span><span class="tag">Design System</span></div>
+          <a class="open" href="https://storybook.js.org/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="node" data-search="nodejs documentation api fs streams">
+          <span class="label">Node + API</span>
+          <h3>Node.js Docs</h3>
+          <p>Core-Referenz für Runtime, APIs, Streams, Crypto, File-System.</p>
+          <div class="tags"><span class="tag">Node.js</span><span class="tag">Backend</span></div>
+          <a class="open" href="https://nodejs.org/docs/latest/api/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="node" data-search="express framework node api server">
+          <span class="label">Node + API</span>
+          <h3>Express</h3>
+          <p>Der Klassiker für schnelle REST APIs und middlewarebasierte Server.</p>
+          <div class="tags"><span class="tag">REST</span><span class="tag">Framework</span></div>
+          <a class="open" href="https://expressjs.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="node" data-search="fastify node performance schema validation">
+          <span class="label">Node + API</span>
+          <h3>Fastify</h3>
+          <p>Sehr schnelles Node Framework mit JSON-Schema und starker DX.</p>
+          <div class="tags"><span class="tag">Performance</span><span class="tag">API</span></div>
+          <a class="open" href="https://fastify.dev/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="node" data-search="postman api testing reqüsts collections">
+          <span class="label">Node + API</span>
+          <h3>Postman</h3>
+          <p>API Reqüsts, Collections, Mocking und Team-Tests in einem Tool.</p>
+          <div class="tags"><span class="tag">API</span><span class="tag">Testing</span></div>
+          <a class="open" href="https://www.postman.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="node" data-search="hoppscotch api open source reqüst tester">
+          <span class="label">Node + API</span>
+          <h3>Hoppscotch</h3>
+          <p>Leichtgewichtige Open-Source Alternative für schnelle API Calls.</p>
+          <div class="tags"><span class="tag">API</span><span class="tag">OSS</span></div>
+          <a class="open" href="https://hoppscotch.io/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="node" data-search="socket io realtime websocket node chat">
+          <span class="label">Node + API</span>
+          <h3>Socket.IO</h3>
+          <p>Realtime Kommunikation für Chat, Live-Dashboards und Events.</p>
+          <div class="tags"><span class="tag">Realtime</span><span class="tag">WebSocket</span></div>
+          <a class="open" href="https://socket.io/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="css" data-search="mdn web docs html css javascript reference">
+          <span class="label">HTML + CSS + UI</span>
+          <h3>MDN Web Docs</h3>
+          <p>Die wichtigste Referenz für HTML, CSS, JS und Browser APIs.</p>
+          <div class="tags"><span class="tag">Reference</span><span class="tag">Web</span></div>
+          <a class="open" href="https://developer.mozilla.org/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="css" data-search="caniuse browser support css js feature">
+          <span class="label">HTML + CSS + UI</span>
+          <h3>Can I Use</h3>
+          <p>Browser-Kompatibilität für Features vor Rollout checken.</p>
+          <div class="tags"><span class="tag">Compatibility</span><span class="tag">Browsers</span></div>
+          <a class="open" href="https://caniuse.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="css" data-search="css tricks guides snippets ui layout">
+          <span class="label">HTML + CSS + UI</span>
+          <h3>CSS-Tricks</h3>
+          <p>Praktische Guides, Snippets und Layout-Ideen für Frontend Teams.</p>
+          <div class="tags"><span class="tag">Guides</span><span class="tag">CSS</span></div>
+          <a class="open" href="https://css-tricks.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="css" data-search="tailwind css utility classes design system">
+          <span class="label">HTML + CSS + UI</span>
+          <h3>Tailwind CSS</h3>
+          <p>Utility-First CSS Framework für schnelle, konsistente UI Umsetzung.</p>
+          <div class="tags"><span class="tag">CSS Framework</span><span class="tag">Utility</span></div>
+          <a class="open" href="https://tailwindcss.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="css" data-search="flexbox froggy css learning game">
+          <span class="label">HTML + CSS + UI</span>
+          <h3>Flexbox Froggy</h3>
+          <p>Interaktives Lernspiel für Flexbox Grundlagen und Layout-Denken.</p>
+          <div class="tags"><span class="tag">Learning</span><span class="tag">Flexbox</span></div>
+          <a class="open" href="https://flexboxfroggy.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="css" data-search="grid garden css grid learning">
+          <span class="label">HTML + CSS + UI</span>
+          <h3>Grid Garden</h3>
+          <p>Spielerisches Training für CSS Grid und responsive Rastersysteme.</p>
+          <div class="tags"><span class="tag">Learning</span><span class="tag">Grid</span></div>
+          <a class="open" href="https://cssgridgarden.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="css" data-search="figma ui design prototyping components">
+          <span class="label">HTML + CSS + UI</span>
+          <h3>Figma</h3>
+          <p>UI Design, Prototyping und Team-Feedback in einem kollaborativen Tool.</p>
+          <div class="tags"><span class="tag">Design</span><span class="tag">Prototype</span></div>
+          <a class="open" href="https://www.figma.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="assets" data-search="squoosh image compress webp avif optimize">
+          <span class="label">Bilder + Assets</span>
+          <h3>Squoosh</h3>
+          <p>Bilder lokal komprimieren und Formate wie AVIF/WebP fein einstellen.</p>
+          <div class="tags"><span class="tag">Compression</span><span class="tag">WebP</span></div>
+          <a class="open" href="https://squoosh.app/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="assets" data-search="tinypng image optimization png jpg">
+          <span class="label">Bilder + Assets</span>
+          <h3>TinyPNG</h3>
+          <p>Schnelle Bildoptimierung für PNG/JPG ohne visuelle Qualitätsverluste.</p>
+          <div class="tags"><span class="tag">Optimization</span><span class="tag">PNG</span></div>
+          <a class="open" href="https://tinypng.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="assets" data-search="svgomg svg optimize clean code">
+          <span class="label">Bilder + Assets</span>
+          <h3>SVGOMG</h3>
+          <p>SVG Dateien optimieren und unnötigen Code entfernen.</p>
+          <div class="tags"><span class="tag">SVG</span><span class="tag">Optimization</span></div>
+          <a class="open" href="https://jakearchibald.github.io/svgomg/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="assets" data-search="remove bg image background ai">
+          <span class="label">Bilder + Assets</span>
+          <h3>remove.bg</h3>
+          <p>Hintergründe schnell freistellen für Hero-Assets und Produktbilder.</p>
+          <div class="tags"><span class="tag">Image AI</span><span class="tag">Editing</span></div>
+          <a class="open" href="https://www.remove.bg/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="assets" data-search="favicon generator icon app manifest">
+          <span class="label">Bilder + Assets</span>
+          <h3>RealFaviconGenerator</h3>
+          <p>Favicons für alle Plattformen inklusive Manifest und Meta Tags.</p>
+          <div class="tags"><span class="tag">Favicon</span><span class="tag">PWA</span></div>
+          <a class="open" href="https://realfavicongenerator.net/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="assets" data-search="unsplash free images photos web">
+          <span class="label">Bilder + Assets</span>
+          <h3>Unsplash</h3>
+          <p>Hochwertige freie Bilder für Placeholder, Landingpages und Blogposts.</p>
+          <div class="tags"><span class="tag">Photos</span><span class="tag">Assets</span></div>
+          <a class="open" href="https://unsplash.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="quality" data-search="eslint lint javascript typescript code quality">
+          <span class="label">Testing + Quality</span>
+          <h3>ESLint</h3>
+          <p>Linting Standard für konsistenten, robusten JavaScript/TypeScript Code.</p>
+          <div class="tags"><span class="tag">Linting</span><span class="tag">Code Quality</span></div>
+          <a class="open" href="https://eslint.org/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="quality" data-search="prettier formatting code style">
+          <span class="label">Testing + Quality</span>
+          <h3>Prettier</h3>
+          <p>Automatische Formatierung für einheitlichen Style im Team.</p>
+          <div class="tags"><span class="tag">Formatting</span><span class="tag">DX</span></div>
+          <a class="open" href="https://prettier.io/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="quality" data-search="jest test runner unit tests javascript">
+          <span class="label">Testing + Quality</span>
+          <h3>Jest</h3>
+          <p>Bewährter Test Runner für Unit- und Integrationstests.</p>
+          <div class="tags"><span class="tag">Unit Tests</span><span class="tag">JS</span></div>
+          <a class="open" href="https://jestjs.io/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="quality" data-search="vitest test runner vite typescript">
+          <span class="label">Testing + Quality</span>
+          <h3>Vitest</h3>
+          <p>Schneller Test Runner, besonders stark in Vite/TS Projekten.</p>
+          <div class="tags"><span class="tag">Fast Tests</span><span class="tag">TypeScript</span></div>
+          <a class="open" href="https://vitest.dev/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="quality" data-search="playwright e2e browser testing">
+          <span class="label">Testing + Quality</span>
+          <h3>Playwright</h3>
+          <p>Cross-Browser E2E Tests mit starker Automatisierung und Tracing.</p>
+          <div class="tags"><span class="tag">E2E</span><span class="tag">Browser</span></div>
+          <a class="open" href="https://playwright.dev/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="quality" data-search="cypress e2e testing frontend">
+          <span class="label">Testing + Quality</span>
+          <h3>Cypress</h3>
+          <p>Beliebtes Frontend E2E Tool mit starkem Debugging in der GUI.</p>
+          <div class="tags"><span class="tag">E2E</span><span class="tag">Frontend</span></div>
+          <a class="open" href="https://www.cypress.io/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="quality" data-search="testing library react components behavior">
+          <span class="label">Testing + Quality</span>
+          <h3>Testing Library</h3>
+          <p>Tests nahe am Nutzerverhalten statt an Implementierungsdetails.</p>
+          <div class="tags"><span class="tag">React</span><span class="tag">Testing</span></div>
+          <a class="open" href="https://testing-library.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="quality" data-search="lighthouse web performance accessibility">
+          <span class="label">Testing + Quality</span>
+          <h3>Lighthouse</h3>
+          <p>Messung von Performance, Accessibility, SEO und Best Practices.</p>
+          <div class="tags"><span class="tag">Performance</span><span class="tag">Audit</span></div>
+          <a class="open" href="https://developer.chrome.com/docs/lighthouse/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="deploy" data-search="vercel nextjs deployment edge hosting">
+          <span class="label">Deploy + Hosting</span>
+          <h3>Vercel</h3>
+          <p>Nahtloses Hosting für Next.js, Preview Deployments und Analytics.</p>
+          <div class="tags"><span class="tag">Hosting</span><span class="tag">Next.js</span></div>
+          <a class="open" href="https://vercel.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="deploy" data-search="netlify frontend hosting static sites">
+          <span class="label">Deploy + Hosting</span>
+          <h3>Netlify</h3>
+          <p>Deploys, Form Handling und Edge Functions für Frontend Projekte.</p>
+          <div class="tags"><span class="tag">Static</span><span class="tag">CDN</span></div>
+          <a class="open" href="https://www.netlify.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="deploy" data-search="railway app deployment node postgres">
+          <span class="label">Deploy + Hosting</span>
+          <h3>Railway</h3>
+          <p>App + Datenbank schnell deployen, ideal für Node und interne Tools.</p>
+          <div class="tags"><span class="tag">Backend</span><span class="tag">PaaS</span></div>
+          <a class="open" href="https://railway.app/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="deploy" data-search="render web service background jobs">
+          <span class="label">Deploy + Hosting</span>
+          <h3>Render</h3>
+          <p>Deploy für Web Services, Worker und Cron Jobs mit guter DX.</p>
+          <div class="tags"><span class="tag">Web Service</span><span class="tag">Node</span></div>
+          <a class="open" href="https://render.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="deploy" data-search="fly io edge apps docker">
+          <span class="label">Deploy + Hosting</span>
+          <h3>Fly.io</h3>
+          <p>Containerized Apps nah am Nutzer mit globalem Edge Footprint.</p>
+          <div class="tags"><span class="tag">Edge</span><span class="tag">Docker</span></div>
+          <a class="open" href="https://fly.io/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="deploy" data-search="cloudflare pages workers cdn">
+          <span class="label">Deploy + Hosting</span>
+          <h3>Cloudflare Pages</h3>
+          <p>Frontend Hosting plus Workers für globale, sehr schnelle Apps.</p>
+          <div class="tags"><span class="tag">CDN</span><span class="tag">Workers</span></div>
+          <a class="open" href="https://pages.cloudflare.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="deploy" data-search="sentry error monitoring performance tracing">
+          <span class="label">Deploy + Hosting</span>
+          <h3>Sentry</h3>
+          <p>Error Tracking und Performance Monitoring für Produktion.</p>
+          <div class="tags"><span class="tag">Monitoring</span><span class="tag">Errors</span></div>
+          <a class="open" href="https://sentry.io/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="db" data-search="prisma orm migrations typescript sql">
+          <span class="label">DB + Data</span>
+          <h3>Prisma</h3>
+          <p>Type-safe ORM mit Migrationsworkflow für Node und Next.js.</p>
+          <div class="tags"><span class="tag">ORM</span><span class="tag">Type Safety</span></div>
+          <a class="open" href="https://www.prisma.io/docs" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="db" data-search="supabase postgres auth storage realtime">
+          <span class="label">DB + Data</span>
+          <h3>Supabase</h3>
+          <p>Postgres Plattform mit Auth, Storage und Realtime Features.</p>
+          <div class="tags"><span class="tag">Postgres</span><span class="tag">Backend</span></div>
+          <a class="open" href="https://supabase.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="db" data-search="neon serverless postgres">
+          <span class="label">DB + Data</span>
+          <h3>Neon</h3>
+          <p>Serverless Postgres mit Branching für Entwicklungsumgebungen.</p>
+          <div class="tags"><span class="tag">Serverless DB</span><span class="tag">Postgres</span></div>
+          <a class="open" href="https://neon.tech/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="db" data-search="planetscale mysql branching serverless">
+          <span class="label">DB + Data</span>
+          <h3>PlanetScale</h3>
+          <p>MySQL Plattform mit Branching und deploymentfreundlichem Workflow.</p>
+          <div class="tags"><span class="tag">MySQL</span><span class="tag">Cloud DB</span></div>
+          <a class="open" href="https://planetscale.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="db" data-search="mongodb atlas cloud database">
+          <span class="label">DB + Data</span>
+          <h3>MongoDB Atlas</h3>
+          <p>Managed MongoDB Cluster für dokumentenbasierte Backends.</p>
+          <div class="tags"><span class="tag">NoSQL</span><span class="tag">Cloud</span></div>
+          <a class="open" href="https://www.mongodb.com/atlas" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="db" data-search="tableplus database gui sql client">
+          <span class="label">DB + Data</span>
+          <h3>TablePlus</h3>
+          <p>Schneller SQL Client für lokale und entfernte Datenbanken.</p>
+          <div class="tags"><span class="tag">DB Client</span><span class="tag">SQL</span></div>
+          <a class="open" href="https://tableplus.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="productivity" data-search="regex101 regular expressions tester">
+          <span class="label">Produktivität</span>
+          <h3>Regex101</h3>
+          <p>Regex testen, erklären und validieren inklusive Debug-Ansicht.</p>
+          <div class="tags"><span class="tag">Regex</span><span class="tag">Debug</span></div>
+          <a class="open" href="https://regex101.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="productivity" data-search="json formatter validator prettify">
+          <span class="label">Produktivität</span>
+          <h3>JSON Formatter</h3>
+          <p>JSON validieren und lesbar formatieren für API und Config Debugging.</p>
+          <div class="tags"><span class="tag">JSON</span><span class="tag">Validation</span></div>
+          <a class="open" href="https://jsonformatter.org/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="productivity" data-search="jwt io token decode debug">
+          <span class="label">Produktivität</span>
+          <h3>JWT.io</h3>
+          <p>JWTs schnell decodieren und Claims für Auth-Flows analysieren.</p>
+          <div class="tags"><span class="tag">Auth</span><span class="tag">Tokens</span></div>
+          <a class="open" href="https://jwt.io/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="productivity" data-search="excalidraw diagrams architecture sketches">
+          <span class="label">Produktivität</span>
+          <h3>Excalidraw</h3>
+          <p>Schnelle Architektur-Skizzen und Flows im handgezeichneten Stil.</p>
+          <div class="tags"><span class="tag">Diagram</span><span class="tag">Architecture</span></div>
+          <a class="open" href="https://excalidraw.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="productivity" data-search="draw io diagrams uml flowcharts">
+          <span class="label">Produktivität</span>
+          <h3>draw.io</h3>
+          <p>Flowcharts, UML und Systemdiagramme für technische Dokumentation.</p>
+          <div class="tags"><span class="tag">Diagram</span><span class="tag">Docs</span></div>
+          <a class="open" href="https://www.diagrams.net/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="productivity" data-search="bundlephobia package size npm">
+          <span class="label">Produktivität</span>
+          <h3>Bundlephobia</h3>
+          <p>NPM Package Grösse und Impact vor der Installation checken.</p>
+          <div class="tags"><span class="tag">NPM</span><span class="tag">Bundle</span></div>
+          <a class="open" href="https://bundlephobia.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="productivity" data-search="npm trends compare packages">
+          <span class="label">Produktivität</span>
+          <h3>NPM Trends</h3>
+          <p>Libs vergleichen nach Downloadzahlen und langfristiger Entwicklung.</p>
+          <div class="tags"><span class="tag">Research</span><span class="tag">NPM</span></div>
+          <a class="open" href="https://npmtrends.com/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="productivity" data-search="roadmap web developer learning react next node">
+          <span class="label">Produktivität</span>
+          <h3>roadmap.sh</h3>
+          <p>Skill-Roadmaps für Frontend, Backend, React und Fullstack Teams.</p>
+          <div class="tags"><span class="tag">Learning</span><span class="tag">Roadmap</span></div>
+          <a class="open" href="https://roadmap.sh/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="react node" data-search="typescript docs handbook tsconfig">
+          <span class="label">Core</span>
+          <h3>TypeScript Docs</h3>
+          <p>Typisierung, Utility Types, Config und Patterns für sauberen Code.</p>
+          <div class="tags"><span class="tag">TypeScript</span><span class="tag">Core</span></div>
+          <a class="open" href="https://www.typescriptlang.org/docs/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="react node" data-search="vite build tool frontend react">
+          <span class="label">Core</span>
+          <h3>Vite</h3>
+          <p>Schneller Dev Server und Build Tool für moderne Frontend Apps.</p>
+          <div class="tags"><span class="tag">Build</span><span class="tag">Frontend</span></div>
+          <a class="open" href="https://vitejs.dev/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="node productivity" data-search="pnpm fast package manager workspace">
+          <span class="label">Core</span>
+          <h3>pnpm</h3>
+          <p>Effizienter Package Manager für Monorepos und grosse Projekte.</p>
+          <div class="tags"><span class="tag">Package Manager</span><span class="tag">Monorepo</span></div>
+          <a class="open" href="https://pnpm.io/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="node productivity" data-search="turborepo monorepo build cache">
+          <span class="label">Core</span>
+          <h3>Turborepo</h3>
+          <p>Monorepo Build Orchestrierung mit Caching und Pipeline Control.</p>
+          <div class="tags"><span class="tag">Monorepo</span><span class="tag">CI</span></div>
+          <a class="open" href="https://turbo.build/repo" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="css assets" data-search="coolors palette generator colors">
+          <span class="label">Design</span>
+          <h3>Coolors</h3>
+          <p>Schneller Generator für harmonische Farbpaletten in UI Projekten.</p>
+          <div class="tags"><span class="tag">Colors</span><span class="tag">UI</span></div>
+          <a class="open" href="https://coolors.co/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="css assets" data-search="fontpair typography pairings web design">
+          <span class="label">Design</span>
+          <h3>Fontpair</h3>
+          <p>Typografie-Kombinationen für Headlines, Text und Interface Labels.</p>
+          <div class="tags"><span class="tag">Typography</span><span class="tag">UI</span></div>
+          <a class="open" href="https://www.fontpair.co/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="productivity" data-search="reqres fake api prototype testing">
+          <span class="label">API Utility</span>
+          <h3>Reqres</h3>
+          <p>Fake REST API für Mockups, Integrations-Tests und Demos.</p>
+          <div class="tags"><span class="tag">Mock API</span><span class="tag">Testing</span></div>
+          <a class="open" href="https://reqres.in/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+
+        <article class="card" data-category="productivity" data-search="http status codes reference api">
+          <span class="label">API Utility</span>
+          <h3>HTTP Status Dogs</h3>
+          <p>HTTP Statuscodes schnell visuell zuordnen und besser merken.</p>
+          <div class="tags"><span class="tag">HTTP</span><span class="tag">Reference</span></div>
+          <a class="open" href="https://http.dog/" target="_blank" rel="noreferrer">Tool öffnen</a>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    (function () {
+      const searchInput = document.getElementById("search");
+      const chips = Array.from(document.querySelectorAll(".chip"));
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const resultCount = document.getElementById("result-count");
+      let activeFilter = "all";
+
+      function cardMatchesFilter(card, filter) {
+        if (filter === "all") return true;
+        const categories = (card.getAttribute("data-category") || "").split(" ");
+        return categories.includes(filter);
+      }
+
+      function cardMatchesSearch(card, term) {
+        if (!term) return true;
+        const text = (card.getAttribute("data-search") || "").toLowerCase();
+        const title = (card.querySelector("h3")?.textContent || "").toLowerCase();
+        const description = (card.querySelector("p")?.textContent || "").toLowerCase();
+        const combined = [text, title, description].join(" ");
+        return combined.includes(term);
+      }
+
+      function updateCards() {
+        const term = (searchInput.value || "").trim().toLowerCase();
+        let visible = 0;
+
+        cards.forEach((card) => {
+          const show = cardMatchesFilter(card, activeFilter) && cardMatchesSearch(card, term);
+          card.classList.toggle("hidden", !show);
+          if (show) visible += 1;
+        });
+
+        resultCount.textContent = visible + " Treffer";
+      }
+
+      chips.forEach((chip) => {
+        chip.addEventListener("click", () => {
+          chips.forEach((c) => c.classList.remove("active"));
+          chip.classList.add("active");
+          activeFilter = chip.getAttribute("data-filter") || "all";
+          updateCards();
+        });
+      });
+
+      searchInput.addEventListener("input", updateCards);
+      updateCards();
+    })();
+  </script>
+</body>
+</html>
